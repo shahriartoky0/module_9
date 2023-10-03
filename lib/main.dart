@@ -46,6 +46,8 @@ class _HomeScreenUI extends State<HomeScreen> {
           child: Column(
             children: [
               TextFormField(
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
                 validator: (String? value) {
                   if (value == null) {
                     return 'This is null';
@@ -83,8 +85,8 @@ class _HomeScreenUI extends State<HomeScreen> {
                   ElevatedButton.icon(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        double firstNumber = double.parse(_fieldOne.text.trim());
-                        double secondNumber = double.parse(_fieldTwo.text.trim());
+                        double firstNumber = stringToDouble(_fieldOne.text.trim());
+                        double secondNumber = stringToDouble(_fieldTwo.text.trim());
                         result =
                             sum(firstNum: firstNumber, secondNum: secondNumber);
                         _fieldOne.text = result.toString() ;
@@ -99,8 +101,8 @@ class _HomeScreenUI extends State<HomeScreen> {
                   ElevatedButton.icon(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        double firstNumber = double.parse(_fieldOne.text.trim());
-                        double secondNumber = double.parse(_fieldTwo.text.trim());
+                        double firstNumber = stringToDouble(_fieldOne.text.trim());
+                        double secondNumber =stringToDouble(_fieldTwo.text.trim());
                         result =
                             subtract(firstNum: firstNumber, secondNum: secondNumber);
                         setState(() {});
@@ -114,8 +116,8 @@ class _HomeScreenUI extends State<HomeScreen> {
                   ElevatedButton.icon(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        double firstNumber = double.parse(_fieldOne.text.trim());
-                        double secondNumber = double.parse(_fieldTwo.text.trim());
+                        double firstNumber = stringToDouble(_fieldOne.text.trim());
+                        double secondNumber = stringToDouble(_fieldTwo.text.trim());
                         result =
                             multiplication(firstNum: firstNumber, secondNum: secondNumber);
                         setState(() {});
@@ -129,8 +131,8 @@ class _HomeScreenUI extends State<HomeScreen> {
                   ElevatedButton.icon(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        double firstNumber = double.parse(_fieldOne.text.trim());
-                        double secondNumber = double.parse(_fieldTwo.text.trim());
+                        double firstNumber = stringToDouble(_fieldOne.text.trim());
+                        double secondNumber = stringToDouble(_fieldTwo.text.trim());
                         result =
                             modulus(firstNum: firstNumber, secondNum: secondNumber);
                         setState(() {});
@@ -167,6 +169,11 @@ double subtract({required double firstNum, required double secondNum}) {
   }
   double modulus({required double firstNum, required double secondNum}) {
     return firstNum % secondNum;
+  }
+
+  double stringToDouble ( String text)
+  {
+    return double.tryParse(text)?? 0; //default value set kora zaay string dile
   }
 
 }
