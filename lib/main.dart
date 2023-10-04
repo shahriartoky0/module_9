@@ -1,22 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:module_9/style.dart';
 
-void main() {
-  runApp(Myapp());
+void main (){
+  runApp(const MyApp());
 }
 
-class Myapp extends StatelessWidget {
-  const Myapp({super.key});
+class MyApp extends StatelessWidget{
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomeScreen(),
-    );
+    return const MaterialApp(home: HomeScreen(),);
   }
-}
 
-class HomeScreen extends StatefulWidget {
+}
+class HomeScreen extends StatefulWidget{
   const HomeScreen({super.key});
 
   @override
@@ -24,131 +22,72 @@ class HomeScreen extends StatefulWidget {
     return _HomeScreenUI();
   }
 }
-
-class _HomeScreenUI extends State<HomeScreen> {
-  double result = 0.0;
-
-  final TextEditingController _fieldOne = TextEditingController();
-  final TextEditingController _fieldTwo = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+class _HomeScreenUI extends State<HomeScreen>
+{
+  double amount = 0 ;
+  final TextEditingController _inputFieldOne = TextEditingController();
+  final TextEditingController _inputFieldTwo = TextEditingController();
+  final GlobalKey <FormState> _formKey = GlobalKey<FormState>();
+  Map <String , double> inputs = {'firstNum' : 0 , 'secondNum' : 0};
+  storeValue (key , inputValue){
+    inputs.update(key, (value) => inputValue);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sum App '),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("Practising Form Validation"),),
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               TextFormField(
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                validator: (String? value) {
-                  if (value == null) {
-                    return 'This is null';
-                  }
-                  if (value.trim().isEmpty == true) {
-                    return 'Please Give a Number';
-                  }
+                validator: (String? value){
+                  if (value == null)
+                    {
+                      return 'Null Value Inserted';
+                    }
+                  if (value.trim().isEmpty == true)
+                    {
+                      return 'Please Insert a value';
+                    }
                 },
-                controller: _fieldOne,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'First Number'),
+                controller: _inputFieldOne,
+                decoration: appTextField('Net Amount'),
               ),
-              const SizedBox(
-                height: 5,
-              ),
+              const SizedBox(height: 10,),
               TextFormField(
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                controller: _fieldTwo,
-                validator: (String? value) {
-                  if (value == null) {
-                    return 'This is null';
+                validator: (String? value){
+                  if (value == null)
+                  {
+                    return 'Null Value Inserted';
                   }
-                  if (value.trim().isEmpty == true) {
-                    return 'Please Give a Number';
+                  if (value.trim().isEmpty == true)
+                  {
+                    return 'Null Value Inserted';
                   }
                 },
-                decoration: const InputDecoration(
-                    enabledBorder: OutlineInputBorder(),
-                    labelText: 'Second Number'),
+                controller: _inputFieldTwo,
+                decoration: appTextField('Rate of Interest'),
               ),
-              ButtonBar(
-                alignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        double firstNumber = stringToDouble(_fieldOne.text.trim());
-                        double secondNumber = stringToDouble(_fieldTwo.text.trim());
-                        result =
-                            sum(firstNum: firstNumber, secondNum: secondNumber);
-                        _fieldOne.text = result.toString() ;
-                        setState(() {});
-                      }
+              const SizedBox(height: 20,),
+              ElevatedButton(onPressed: (){
+                if(_formKey.currentState!.validate())
+                  {
+                    double principal = double.parse(_inputFieldOne.text.trim());
+                    double interest = double.parse(_inputFieldTwo.text.trim());
+                    storeValue('firstNum', principal);
+                    storeValue('secondNum', interest);
 
-                      print('Tenno hokka');
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('Add'),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        double firstNumber = stringToDouble(_fieldOne.text.trim());
-                        double secondNumber =stringToDouble(_fieldTwo.text.trim());
-                        result =
-                            subtract(firstNum: firstNumber, secondNum: secondNumber);
-                        setState(() {});
-                      }
-
-                      print('Marda fera');
-                    },
-                    icon: const Icon(Icons.remove),
-                    label: const Text('Subtract'),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        double firstNumber = stringToDouble(_fieldOne.text.trim());
-                        double secondNumber = stringToDouble(_fieldTwo.text.trim());
-                        result =
-                            multiplication(firstNum: firstNumber, secondNum: secondNumber);
-                        setState(() {});
-                      }
-
-                      print('Marda fera');
-                    },
-                    icon: const Icon(Icons.star_rate),
-                    label: const Text('Multiply'),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        double firstNumber = stringToDouble(_fieldOne.text.trim());
-                        double secondNumber = stringToDouble(_fieldTwo.text.trim());
-                        result =
-                            modulus(firstNum: firstNumber, secondNum: secondNumber);
-                        setState(() {});
-                      }
-
-                      print('Marda fera');
-                    },
-                    icon: const Icon(Icons.percent_sharp),
-                    label: const Text('Modulus'),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Text('The Result is ${result.toStringAsFixed(2)}')
+                    amount = (principal * interest)/100 ;
+                    setState(() {});
+                    print(inputs);
+                  }
+                }, child: const Text('Calculate Interest')),
+              const SizedBox(height: 20,),
+              Text("Your Interest is ${amount.toStringAsFixed(2)}")
             ],
           ),
         ),
@@ -156,25 +95,4 @@ class _HomeScreenUI extends State<HomeScreen> {
     );
   }
 
-  double sum({required double firstNum, required double secondNum}) {
-    return firstNum + secondNum;
-  }
-
-double subtract({required double firstNum, required double secondNum}) {
-    return firstNum - secondNum;
-  }
-
-  double multiplication({required double firstNum, required double secondNum}) {
-    return firstNum * secondNum;
-  }
-  double modulus({required double firstNum, required double secondNum}) {
-    return firstNum % secondNum;
-  }
-
-  double stringToDouble ( String text)
-  {
-    return double.tryParse(text)?? 0; //default value set kora zaay string dile
-  }
-
 }
-
