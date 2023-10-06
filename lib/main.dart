@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp(debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
       home: const HomeScreen(),
     );
@@ -84,14 +84,14 @@ class _HomeScreenUI extends State<HomeScreen> {
               itemCount: shoppingItemsList.length,
               itemBuilder: (context, index) {
                 return Container(
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(5),
                   height: 104,
                   child: Row(
                     children: [
                       Expanded(
                           flex: 30,
                           child: Container(
-                            width: 104,
+                            // width: 104,
                             height: 104,
                             child: Image.network(
                                 shoppingItemsList[index]['image']!),
@@ -145,17 +145,17 @@ class _HomeScreenUI extends State<HomeScreen> {
                                     children: [
                                       TextButton(
                                         onPressed: () {},
-                                        child: const Icon(Icons.remove),
                                         style: appInputButtonStyle(),
+                                        child: const Icon(Icons.remove),
                                       ),
-                                      Text('buy')
+                                      const Text('buy')
                                       ,TextButton(
                                         onPressed: () {},
                                         child: const Icon(Icons.add),
                                         style: appInputButtonStyle(),
                                       ),
-                                      SizedBox(width: 20,),
-                                      Text('total Amount')
+                                      const SizedBox(width: 20,),
+                                      const Text('total Amount')
                                     ],
                                   )
                                 ],
@@ -169,11 +169,37 @@ class _HomeScreenUI extends State<HomeScreen> {
               separatorBuilder: (context, index) {
                 return const Divider();
               },
-            )
+            ),
           ],
         ),
       ),
+     bottomNavigationBar:Stack(
+       alignment: Alignment.center,
+       children: [
+       Container(
+         margin: const EdgeInsets.all(45),
+       // color: Colors.grey, // Background color for the text
 
-    );
+       child: const ListTile(
+         leading: Text('Total Amount' ,style: TextStyle(color: Colors.grey),),
+         trailing: Text('The amount\$'),
+       )
+     ),
+      Positioned(
+        bottom: 10,
+        child: Container(
+
+          width: 350,
+          height: 40,// Width of the button
+          // width: double.infinity, // Width of the button
+          child: ElevatedButton(
+            onPressed: () {
+              // Handle button click here
+            },
+            style: appBottomButtonStyle(),
+            child: const Text('Checkout'),
+          ),
+        ),
+      ),]));
   }
 }
