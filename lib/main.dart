@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:module_9/style.dart';
 
 void main() {
@@ -25,133 +26,70 @@ class HomeScreen extends StatefulWidget {
   }
 }
 
-class _HomeScreenUI extends State<HomeScreen> {
-  double amount = 0;
-
-  double counter = 0;
-
-  final TextEditingController _inputFieldOne = TextEditingController();
-  final TextEditingController _inputFieldTwo = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Map<String, double> inputs = {'firstNum': 0, 'secondNum': 0};
-
-  storeValue(key, inputValue) {
-    inputs.update(key, (value) => inputValue);
-  }
-  mySnackBar (context , message){
-    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: message ));
-  }
+class _HomeScreenUI extends State<HomeScreen>
+{
+  // int counter =0 ;
+  int totalAmount = 0 ;
+  final TextEditingController _glassCounter = TextEditingController();
+  // List<DateTime> waterConsumeList =[];
+  List<waterTrack> waterConsumeList =[];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Practising Form Validation"),
-      ),
-      body: Column(
-        children: [
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    validator: (String? value) {
-                      if (value == null) {
-                        return 'Null Value Inserted';
-                      }
-                      if (value.trim().isEmpty == true) {
-                        return 'Please Insert a value';
-                      }
-                    },
-                    controller: _inputFieldOne,
-                    decoration: appTextField('Net Amount'),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    validator: (String? value) {
-                      if (value == null) {
-                        return 'Null Value Inserted';
-                      }
-                      if (value.trim().isEmpty == true) {
-                        return 'Null Value Inserted';
-                      }
-                    },
-                    controller: _inputFieldTwo,
-                    decoration: appTextField('Rate of Interest'),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          double principal =
-                              double.parse(_inputFieldOne.text.trim());
-                          double interest =
-                              double.parse(_inputFieldTwo.text.trim());
-                          storeValue('firstNum', principal);
-                          storeValue('secondNum', interest);
+   return Scaffold(
+     appBar: AppBar(title: const Text('Water Consume Tracker'),centerTitle: true,),
+     body: Column(
+       mainAxisAlignment: MainAxisAlignment.start ,
+       children: [
 
-                          amount = (principal * interest) / 100;
-                          setState(() {});
-                          print(inputs);
-                        }
-                      },
-                      child: const Text('Calculate Interest')),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text("Your Interest is ${amount.toStringAsFixed(2)}"),
-                ],
-              ),
-            ),
-          ),
-          Container(
-              margin: const EdgeInsets.all(4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('           $counter'),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    children: [
-                      OutlinedButton(
-                        onPressed: () {
-                          counter++;
-                          if (counter == 5)
-                            {
-                              mySnackBar(context , 'Pressed 5 times');
+         Padding(
+           padding: const EdgeInsets.all(8.0),
+           child: Column(
+             children: [
+               Text('Total Consume', style: Theme.of(context).textTheme.titleLarge,),
+               Text('$totalAmount', style: Theme.of(context).textTheme.headlineLarge,),
 
-                            }
-                          setState(() {});
-                        },
-                        child: const Icon(Icons.add),
-                      ),
-                      OutlinedButton(
-                        onPressed: () {
-                          if (counter >0)
-                            {
-                          counter--;
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                   SizedBox(width: 40 ,child: TextFormField(
+                     controller: _glassCounter,
+                     decoration: const InputDecoration(enabledBorder: UnderlineInputBorder()),
+                   ),),
+                   const SizedBox(width: 10,),
+                   ElevatedButton(onPressed: (){
+                     // counter++;
+                     int noOfGlass = int.tryParse(_glassCounter.text) ?? 1 ;
+                     waterTrack currentData=  waterTrack(DateTime.now(), noOfGlass);
+                     totalAmount += noOfGlass;
+                     waterConsumeList.add(currentData);
+                     _glassCounter.text = '1';
+                     // print(currentData.noOfGlass);
 
-                            }
-                          setState(() {});
-                        },
-                        child: const Icon(Icons.remove),
-                      ),
-                    ],
-                  )
-                ],
-              ))
-        ],
-      ),
-    );
+                     setState(() {});
+                   }, child: const Text('Add')),
+                 ],
+               ),
+             ],
+           ),
+         ),
+         Expanded(child: ListView.builder(itemCount: waterConsumeList.length,itemBuilder: (context , index){
+           return ListTile(
+             leading: CircleAvatar(child: Text('${index+1}'),),
+             title: Text(DateFormat('yy-MM-dd HH:mm').format(waterConsumeList[index].time) ),
+             trailing: Text(waterConsumeList[index].noOfGlass.toString(),style: Theme.of(context).textTheme.headlineSmall,),
+
+
+           );
+         }))
+       ],
+     ),
+
+   );
   }
+}
+class waterTrack {
+  final DateTime time ;
+  final int noOfGlass ;
+  waterTrack(this.time, this.noOfGlass);
 }
