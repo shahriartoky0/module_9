@@ -54,6 +54,11 @@ class _HomeScreenUI extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // responsive smaller device
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 300;
+
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white30,
@@ -88,6 +93,7 @@ class _HomeScreenUI extends State<HomeScreen> {
                   height: 104,
                   child: Row(
                     children: [
+                      if(!isSmallScreen)
                       Expanded(
                           flex: 30,
                           child: Container(
@@ -97,7 +103,7 @@ class _HomeScreenUI extends State<HomeScreen> {
                                 shoppingItemsList[index]['image']!),
                           )),
                       Expanded(
-                          flex: 70,
+                          flex: isSmallScreen ? 100: 70 ,
                           child: Container(
 
                             child: Card(
