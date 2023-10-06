@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.green),
       home: const HomeScreen(),
     );
@@ -27,116 +27,153 @@ class HomeScreen extends StatefulWidget {
   }
 }
 
-class _HomeScreenUI extends State<HomeScreen>
-{
-  // int counter =0 ;
-  int totalAmount = 0 ;
-  final TextEditingController _glassCounter = TextEditingController();
-  // List<DateTime> waterConsumeList =[];
-  List<waterTrack> waterConsumeList =[];
-  //showing snackbar
-  mysnackBar( context ,message)
-  {
-    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-  }
-  // Delete dialog
-  myDialog (context ,index)
-  {
-    return showDialog(context: context, builder: (BuildContext context){
-      return Expanded(child: AlertDialog(
-        title: Text('Delete' ,style: Theme.of(context).textTheme.bodyLarge,),
-        content: const Text('Do You want to Delete ?'),
-        actions: [
-          TextButton(onPressed: (){
-            //delete item code here
-            print(index);
-            waterConsumeList.removeAt(index);
-            Navigator.pop(context);
-            mysnackBar(context, 'Item Deleted');
-            setState(() {});
-            print(waterConsumeList[index].noOfGlass);
-
-
-          }, child: const Text('Yes')),
-          TextButton(onPressed: (){
-            // Navigator.pop(context);
-            Navigator.of(context).pop();
-          }, child: const Text('No')),
-        ],
-      ));
-    });
-  }
+class _HomeScreenUI extends State<HomeScreen> {
+  List<Map<String, String>> shoppingItemsList = [
+    {
+      'image':
+          'https://images.unsplash.com/photo-1619603364904-c0498317e145?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80',
+      'type': 'Long-Coat',
+      'color': 'Muddy',
+      'size': 'L'
+    },
+    {
+      'image':
+          'https://images.unsplash.com/photo-1585045059314-ac5b3e2d263a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80',
+      'type': 'T-Shirt',
+      'color': 'Pink',
+      'size': 'M'
+    },
+    {
+      'image':
+          'https://images.unsplash.com/photo-1619473792839-1d3b0355a7c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80',
+      'type': 'Suit',
+      'color': 'Grey',
+      'size': 'L'
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
-     appBar: AppBar(title: const Text('Water Consume Tracker'),centerTitle: true,),
-     body: Column(
-       mainAxisAlignment: MainAxisAlignment.start ,
-       children: [
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white30,
+        elevation: 0,
+        actions: const [
+          Icon(
+            Icons.search,
+            color: Colors.black,
+          ),
+          Text('  ')
+        ],
+      ),
+      body:
+      SingleChildScrollView(
+        // scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(14, 5, 0, 3),
+              child: const Text(
+                'My Bag',
+                style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+              ),
+            ),
+            ListView.separated(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: shoppingItemsList.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: const EdgeInsets.all(10),
+                  height: 104,
+                  child: Row(
+                    children: [
+                      Expanded(
+                          flex: 30,
+                          child: Container(
+                            width: 104,
+                            height: 104,
+                            child: Image.network(
+                                shoppingItemsList[index]['image']!),
+                          )),
+                      Expanded(
+                          flex: 70,
+                          child: Container(
 
-         Padding(
-           padding: const EdgeInsets.all(8.0),
-           child: Column(
-             children: [
-               Text('Total Consume', style: Theme.of(context).textTheme.titleLarge,),
-               Text('$totalAmount', style: Theme.of(context).textTheme.headlineLarge,),
+                            child: Card(
+                              elevation: 10,
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    title: Text(
+                                      shoppingItemsList[index]['type']!,
+                                      style:
+                                          TextStyle(fontWeight: FontWeight.w800),
+                                    ),
+                                    subtitle: RichText(
+                                      text: TextSpan(
+                                          text: 'Color :',
+                                          style: TextStyle(color: Colors.grey),
+                                          children: [
+                                            TextSpan(
+                                                text:
+                                                    '${shoppingItemsList[index]['color']!}      ',
+                                                style: TextStyle(
+                                                    color: Colors.black87),
+                                                children: [
+                                                  TextSpan(
+                                                      text: 'Size :',
+                                                      style: TextStyle(
+                                                          color: Colors.grey),
+                                                      children: [
+                                                        TextSpan(
+                                                            text:
+                                                                '${shoppingItemsList[index]['size']!}         ',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black87))
+                                                      ]),
+                                                ])
+                                          ]),
+                                    ),
+                                    trailing: IconButton(
+                                      icon: Icon(Icons.more_vert),
+                                      onPressed: () {},
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: const Icon(Icons.remove),
+                                        style: appInputButtonStyle(),
+                                      ),
+                                      Text('buy')
+                                      ,TextButton(
+                                        onPressed: () {},
+                                        child: const Icon(Icons.add),
+                                        style: appInputButtonStyle(),
+                                      ),
+                                      SizedBox(width: 20,),
+                                      Text('total Amount')
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const Divider();
+              },
+            )
+          ],
+        ),
+      ),
 
-               Row(
-                 mainAxisAlignment: MainAxisAlignment.center,
-                 children: [
-                   SizedBox(width: 90 ,child: TextFormField(
-                     controller: _glassCounter,
-                     keyboardType: TextInputType.number,
-                     decoration: const InputDecoration(enabledBorder: UnderlineInputBorder(),labelText: 'No of Glass'),
-                   ),),
-                   const SizedBox(width: 10,),
-                   ElevatedButton(onPressed: (){
-                     // counter++;
-                     int noOfGlass = int.tryParse(_glassCounter.text.trim()) ?? 1 ;
-                     waterTrack currentData=  waterTrack(DateTime.now(), noOfGlass);
-                     totalAmount += noOfGlass;
-                     waterConsumeList.add(currentData);
-                     mysnackBar(context, 'Drinked $noOfGlass glass of water');
-                     _glassCounter.text = '1';
-                     // print(currentData.noOfGlass);
-
-                     setState(() {});
-                   }, child: const Text('Add')),
-                 ],
-               ),
-             ],
-           ),
-         ),
-         Expanded(child: ListView.builder(itemCount: waterConsumeList.length,itemBuilder: (context , index){
-           return Card(
-             elevation: 5,
-             child: ListTile(
-               leading: CircleAvatar(child: Text('${index+1}'),),
-               title: Text(DateFormat('yy-MM-dd HH:mm').format(waterConsumeList[index].time) ),
-               trailing:
-               Text(waterConsumeList[index].noOfGlass.toString(),style: Theme.of(context).textTheme.headlineSmall,),
-               onLongPress: (){
-                 myDialog(context, index);
-                 totalAmount= totalAmount- waterConsumeList[index].noOfGlass;
-                 if (totalAmount<0)
-                   {
-                     totalAmount= 0 ;
-                   }
-
-
-               },
-             ),
-           );
-         }))
-       ],
-     ),
-
-   );
+    );
   }
-}
-class waterTrack {
-  final DateTime time ;
-  final int noOfGlass ;
-  waterTrack(this.time, this.noOfGlass);
 }

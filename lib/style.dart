@@ -7,3 +7,7 @@ InputDecoration appTextField (text) {
   labelText: text
   );
 }
+ButtonStyle appInputButtonStyle (){
+  return TextButton.styleFrom(elevation:8,backgroundColor: Colors.white,foregroundColor: Colors.grey,shape:CircleBorder(
+     ));
+}
