@@ -11,8 +11,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomeScreen(),
+    return  MaterialApp(
+      theme: ThemeData(primarySwatch: Colors.green),
+      home: const HomeScreen(),
     );
   }
 }
@@ -33,6 +34,38 @@ class _HomeScreenUI extends State<HomeScreen>
   final TextEditingController _glassCounter = TextEditingController();
   // List<DateTime> waterConsumeList =[];
   List<waterTrack> waterConsumeList =[];
+  //showing snackbar
+  mysnackBar( context ,message)
+  {
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
+  // Delete dialog
+  myDialog (context ,index)
+  {
+    return showDialog(context: context, builder: (BuildContext context){
+      return Expanded(child: AlertDialog(
+        title: Text('Delete' ,style: Theme.of(context).textTheme.bodyLarge,),
+        content: const Text('Do You want to Delete ?'),
+        actions: [
+          TextButton(onPressed: (){
+            //delete item code here
+            print(index);
+            waterConsumeList.removeAt(index);
+            Navigator.pop(context);
+            mysnackBar(context, 'Item Deleted');
+            setState(() {});
+            print(waterConsumeList[index].noOfGlass);
+
+
+          }, child: const Text('Yes')),
+          TextButton(onPressed: (){
+            // Navigator.pop(context);
+            Navigator.of(context).pop();
+          }, child: const Text('No')),
+        ],
+      ));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +85,19 @@ class _HomeScreenUI extends State<HomeScreen>
                Row(
                  mainAxisAlignment: MainAxisAlignment.center,
                  children: [
-                   SizedBox(width: 40 ,child: TextFormField(
+                   SizedBox(width: 90 ,child: TextFormField(
                      controller: _glassCounter,
-                     decoration: const InputDecoration(enabledBorder: UnderlineInputBorder()),
+                     keyboardType: TextInputType.number,
+                     decoration: const InputDecoration(enabledBorder: UnderlineInputBorder(),labelText: 'No of Glass'),
                    ),),
                    const SizedBox(width: 10,),
                    ElevatedButton(onPressed: (){
                      // counter++;
-                     int noOfGlass = int.tryParse(_glassCounter.text) ?? 1 ;
+                     int noOfGlass = int.tryParse(_glassCounter.text.trim()) ?? 1 ;
                      waterTrack currentData=  waterTrack(DateTime.now(), noOfGlass);
                      totalAmount += noOfGlass;
                      waterConsumeList.add(currentData);
+                     mysnackBar(context, 'Drinked $noOfGlass glass of water');
                      _glassCounter.text = '1';
                      // print(currentData.noOfGlass);
 
@@ -74,12 +109,24 @@ class _HomeScreenUI extends State<HomeScreen>
            ),
          ),
          Expanded(child: ListView.builder(itemCount: waterConsumeList.length,itemBuilder: (context , index){
-           return ListTile(
-             leading: CircleAvatar(child: Text('${index+1}'),),
-             title: Text(DateFormat('yy-MM-dd HH:mm').format(waterConsumeList[index].time) ),
-             trailing: Text(waterConsumeList[index].noOfGlass.toString(),style: Theme.of(context).textTheme.headlineSmall,),
+           return Card(
+             elevation: 5,
+             child: ListTile(
+               leading: CircleAvatar(child: Text('${index+1}'),),
+               title: Text(DateFormat('yy-MM-dd HH:mm').format(waterConsumeList[index].time) ),
+               trailing:
+               Text(waterConsumeList[index].noOfGlass.toString(),style: Theme.of(context).textTheme.headlineSmall,),
+               onLongPress: (){
+                 myDialog(context, index);
+                 totalAmount= totalAmount- waterConsumeList[index].noOfGlass;
+                 if (totalAmount<0)
+                   {
+                     totalAmount= 0 ;
+                   }
 
 
+               },
+             ),
            );
          }))
        ],
