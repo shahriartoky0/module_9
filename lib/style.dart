@@ -8,11 +8,11 @@ InputDecoration appTextField (text) {
   );
 }
 ButtonStyle appInputButtonStyle (){
-  return TextButton.styleFrom(elevation:8,backgroundColor: Colors.white,foregroundColor: Colors.grey,shape:CircleBorder(
+  return TextButton.styleFrom(elevation:8,backgroundColor: Colors.white,foregroundColor: Colors.grey,shape:const CircleBorder(
      ));
 }
 
 ButtonStyle appBottomButtonStyle (){
-  return ElevatedButton.styleFrom(elevation:8,backgroundColor: Colors.red,foregroundColor: Colors.white,shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))));
+  return ElevatedButton.styleFrom(elevation:8,backgroundColor: Colors.red,foregroundColor: Colors.white,shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))));
 }
 
